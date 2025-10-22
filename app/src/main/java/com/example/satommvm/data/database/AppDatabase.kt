@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-
-import com.example.aula09_09.data.CarroDao
-import com.example.aula09_09.data.Usuario
-import com.example.aula09_09.data.UsuarioDao
 import com.example.satommvm.data.model.Carro
+import com.example.satommvm.data.model.Usuario
+import com.example.satommvm.data.dao.CarroDao
+import com.example.satommvm.data.dao.UsuarioDao
 
 @Database(entities = [Carro::class, Usuario::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

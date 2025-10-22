@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,16 +39,17 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.satommvm.ui.viewmodel.CarroViewModel
 import com.example.satommvm.R
-
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Dashboard(
     nome: String,
-    navController: NavController,
+    navController: NavHostController,
     carroViewModel: CarroViewModel
 ) {
-    val listaCarros by carroViewModel.carros.collectAsState()
+    val lista by carroViewModel.carros.collectAsState(initial = emptyList())
+    val scope = rememberCoroutineScope() // 🔹 coroutine scope para deletes
 
     Scaffold(
         containerColor = Color.Black,
@@ -56,7 +58,7 @@ fun Dashboard(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("tela3") },
+                onClick = { navController.navigate("cadastroCarro") },
                 containerColor = Color(0xFFAA162C),
                 contentColor = Color.White
             ) { Text("+") }
@@ -67,7 +69,7 @@ fun Dashboard(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (listaCarros.isEmpty()) {
+            if (lista.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -80,11 +82,11 @@ fun Dashboard(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(listaCarros) { carro ->
+                    items(lista) { carro ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { navController.navigate("tela4/${carro.placa}") },
+                                .clickable { navController.navigate("alterarCarro/${carro.placa}") }, // 🔹 rota corrigida
                             elevation = CardDefaults.cardElevation(4.dp)
                         ) {
                             Row(
@@ -110,16 +112,20 @@ fun Dashboard(
                                     contentDescription = carro.nome,
                                     modifier = Modifier
                                         .size(100.dp)
-                                        .clickable { navController.navigate("tela4/${carro.placa}") },
+                                        .clickable { navController.navigate("alterarCarro/${carro.placa}") },
                                     contentScale = ContentScale.Crop
                                 )
                             }
 
                             Button(
-                                onClick = { carroViewModel.deletar(carro) },
+                                onClick = {
+                                    scope.launch {
+                                        carroViewModel.deleteCarro(carro) // 🔹 agora dentro da coroutine
+                                    }
+                                },
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color.Red,
+                                    containerColor = Color(0xFFAA162C),
                                     contentColor = Color.White
                                 )
                             ) { Text("Deletar") }

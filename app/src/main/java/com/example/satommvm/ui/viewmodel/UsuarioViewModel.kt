@@ -2,18 +2,14 @@ package com.example.satommvm.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aula09_09.data.Usuario
-import com.example.aula09_09.data.UsuarioDao
+import com.example.satommvm.data.model.Usuario
 import com.example.satommvm.data.repository.UsuarioRepository
-
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() {
 
-    private val _usuarios = MutableStateFlow<List<Usuario>>(emptyList())
-    val usuarios: StateFlow<List<Usuario>> = _usuarios
+    val usuarios: Flow<List<Usuario>> = repository.getUsuarios()
 
     fun login(nome: String, senha: String, onResult: (Usuario?) -> Unit) {
         viewModelScope.launch {
@@ -22,11 +18,9 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
         }
     }
 
-    fun cadastrar(nome: String, senha: String, onComplete: () -> Unit) {
+    fun cadastrar(nome: String, senha: String) {
         viewModelScope.launch {
-            val novoUsuario = Usuario(nome = nome, senha = senha)
-            repository.insert(novoUsuario)
-            onComplete()
+            repository.insert(Usuario(nome = nome, senha = senha))
         }
     }
 }

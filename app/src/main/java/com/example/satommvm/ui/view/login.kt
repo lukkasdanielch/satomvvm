@@ -32,8 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.aula09_09.data.Usuario
-import com.example.aula09_09.data.UsuarioDao
+
 import com.example.satommvm.R
 import com.example.satommvm.data.repository.UsuarioRepository
 import com.example.satommvm.ui.viewmodel.UsuarioViewModel
@@ -42,15 +41,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.remember
 
 import androidx.compose.runtime.LaunchedEffect
-
-
+import kotlinx.coroutines.launch
 
 @Composable
-fun Login(navController: NavHostController, viewModel: UsuarioViewModel) {
+fun Login(navController: NavHostController, usuarioViewModel: UsuarioViewModel) {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope() // 🔹 coroutine para suspends
 
     Column(
         modifier = Modifier
@@ -59,7 +57,6 @@ fun Login(navController: NavHostController, viewModel: UsuarioViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Caixa de login
         Surface(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             color = Color.Black,
@@ -99,9 +96,9 @@ fun Login(navController: NavHostController, viewModel: UsuarioViewModel) {
 
                 Button(
                     onClick = {
-                        viewModel.login(usuario, senha) { user ->
+                        usuarioViewModel.login(usuario, senha) { user ->
                             if (user != null) {
-                                navController.navigate("dasboard/${user.nome}")
+                                navController.navigate("dashboard/${user.nome}")
                             } else {
                                 Toast.makeText(context, "Login inválido!", Toast.LENGTH_SHORT).show()
                             }
@@ -112,12 +109,17 @@ fun Login(navController: NavHostController, viewModel: UsuarioViewModel) {
                         containerColor = Color(0xFFAA162C),
                         contentColor = Color.White
                     )
-                ) { Text("Entrar") }
+                ) {
+                    Text("Entrar")
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
                     onClick = {
                         if (usuario.isNotEmpty() && senha.isNotEmpty()) {
-                            viewModel.cadastrar(usuario, senha) {
+                            scope.launch {
+                                usuarioViewModel.cadastrar(usuario, senha)
                                 Toast.makeText(context, "Cadastrado com sucesso!", Toast.LENGTH_SHORT).show()
                                 usuario = ""
                                 senha = ""

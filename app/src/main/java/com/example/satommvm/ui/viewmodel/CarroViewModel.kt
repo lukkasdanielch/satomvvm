@@ -2,34 +2,28 @@ package com.example.satommvm.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aula09_09.data.CarroDao
 import com.example.satommvm.data.model.Carro
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
+import com.example.satommvm.data.repository.CarroRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class CarroViewModel(private val repository: CarroDao) : ViewModel() {
+class CarroViewModel(private val repository: CarroRepository) : ViewModel() {
 
-    private val _carros = MutableStateFlow<List<Carro>>(emptyList())
-    val carros: StateFlow<List<Carro>> = _carros
+    // Flow que observa todos os carros
+    val carros: Flow<List<Carro>> = repository.getCarros()
 
-    init {
-        carregarCarros()
-    }
-
-    fun carregarCarros() {
+    fun addCarro(carro: Carro, onFinish: () -> Unit) {
         viewModelScope.launch {
-            repository.getCarros().collect { lista ->
-                _carros.value = lista
-            }
+            repository.insert(carro)
+            onFinish()
         }
     }
 
-    fun deletar(carro: Carro) {
-        viewModelScope.launch {
-            repository.delete(carro)
-            carregarCarros()
-        }
+    fun updateCarro(carro: Carro) = viewModelScope.launch {
+        repository.update(carro)
+    }
+
+    fun deleteCarro(carro: Carro) = viewModelScope.launch {
+        repository.delete(carro)
     }
 }

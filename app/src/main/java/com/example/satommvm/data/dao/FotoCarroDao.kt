@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FotoCarroDao {
+
     @Query("SELECT * FROM fotos_carro WHERE carroId = :carroId")
     fun getFotos(carroId: Int): Flow<List<FotoCarro>>
 

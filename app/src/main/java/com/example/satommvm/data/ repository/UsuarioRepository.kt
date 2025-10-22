@@ -1,17 +1,19 @@
 package com.example.satommvm.data.repository
 
 
-import com.example.aula09_09.data.Usuario
-import com.example.aula09_09.data.UsuarioDao
 
+import com.example.satommvm.data.dao.UsuarioDao
+import com.example.satommvm.data.model.Usuario
 
-class UsuarioRepository(private val dao: UsuarioDao) {
-
-    suspend fun login(nome: String, senha: String): Usuario? {
-        return dao.login(nome, senha)
-    }
+class UsuarioRepository(private val usuarioDao: UsuarioDao) {
 
     suspend fun insert(usuario: Usuario) {
-        dao.insert(usuario)
+        usuarioDao.insert(usuario)
     }
+
+    suspend fun login(nome: String, senha: String): Usuario? {
+        return usuarioDao.login(nome, senha)
+    }
+
+    fun getUsuarios() = usuarioDao.getUsuarios()
 }

@@ -1,4 +1,4 @@
-package com.example.aula09_09.data
+package com.example.satommvm.data.dao
 
 import androidx.room.*
 import com.example.satommvm.data.model.Carro
@@ -18,6 +18,7 @@ interface CarroDao {
 
     @Delete
     suspend fun delete(carro: Carro)
+
     @Query("SELECT * FROM carros WHERE placa = :placa LIMIT 1")
     fun getCarroByPlaca(placa: String): Flow<Carro?>
 }
