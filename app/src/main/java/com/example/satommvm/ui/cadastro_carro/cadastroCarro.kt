@@ -1,8 +1,5 @@
-package com.example.satommvm.ui.view
+package com.example.satommvm.ui.cadastro_carro
 
-
-
-import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,27 +18,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.satommvm.data.dao.CarroDao
-import com.example.satommvm.data.model.Carro
-import com.example.satommvm.ui.viewmodel.CarroViewModel
-import kotlinx.coroutines.launch
-import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CadastroCarro(navController: NavHostController, carroViewModel: CarroViewModel) {
-    var nome by remember { mutableStateOf("") }
-    var modelo by remember { mutableStateOf("") }
-    var ano by remember { mutableStateOf("") }
-    var placa by remember { mutableStateOf("") }
-    var imagemUri by remember { mutableStateOf<String?>(null) }
-
+fun CadastroCarro(
+    navController: NavHostController,
+    cadastroCarroViewModel: CadastroCarroViewModel // <-- CORREÇÃO
+) {
+    val uiState by cadastroCarroViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { imagemUri = it.toString() }
+        cadastroCarroViewModel.updateCadastroImagemUri(uri?.toString())
+    }
+
+    LaunchedEffect(key1 = uiState) {
+        if (uiState.isSaveSuccess) {
+            Toast.makeText(context, "Carro salvo com sucesso!", Toast.LENGTH_SHORT).show()
+            cadastroCarroViewModel.resetCadastroCarroState()
+            navController.popBackStack()
+        }
+        uiState.errorMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            cadastroCarroViewModel.resetCadastroCarroState()
+        }
     }
 
     Scaffold(
@@ -68,102 +70,65 @@ fun CadastroCarro(navController: NavHostController, carroViewModel: CarroViewMod
                     contentColor = Color.White
                 ),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Selecionar Imagem")
-            }
-            imagemUri?.let { uri ->
+            ) { Text("Selecionar Imagem") }
+
+            uiState.imagemUri?.let { uri ->
                 Spacer(modifier = Modifier.height(16.dp))
                 Image(
                     painter = rememberAsyncImagePainter(uri),
                     contentDescription = "Imagem selecionada",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp),
+                    modifier = Modifier.fillMaxWidth().height(180.dp),
                     contentScale = ContentScale.Crop
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
-                value = nome,
-                onValueChange = { nome = it },
+                value = uiState.nome,
+                onValueChange = { cadastroCarroViewModel.updateCadastroNome(it) },
                 label = { Text("Nome") },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = modelo,
-                onValueChange = { modelo = it },
+                value = uiState.modelo,
+                onValueChange = { cadastroCarroViewModel.updateCadastroModelo(it) },
                 label = { Text("Modelo") },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = ano,
-                onValueChange = { ano = it },
+                value = uiState.ano,
+                onValueChange = { cadastroCarroViewModel.updateCadastroAno(it) },
                 label = { Text("Ano") },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = placa,
-                onValueChange = { placa = it },
+                value = uiState.placa,
+                onValueChange = { cadastroCarroViewModel.updateCadastroPlaca(it) },
                 label = { Text("Placa") },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    if (nome.isNotEmpty() && modelo.isNotEmpty() && ano.isNotEmpty() && placa.isNotEmpty() && imagemUri != null) {
-                        val caminhoImagem = saveImageToInternalStorage(
-                            context,
-                            Uri.parse(imagemUri),
-                            "carro_${placa}.jpg"
-                        )
-
-                        val novoCarro = Carro(
-                            nome = nome,
-                            modelo = modelo,
-                            ano = ano.toIntOrNull() ?: 0,
-                            placa = placa,
-                            imagemUri = caminhoImagem
-                        )
-
-                        carroViewModel.addCarro(novoCarro) {
-                            Toast.makeText(context, "Carro salvo com sucesso!", Toast.LENGTH_SHORT).show()
-                            nome = ""
-                            modelo = ""
-                            ano = ""
-                            placa = ""
-                            imagemUri = null
-                            navController.popBackStack()
-                        }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Preencha todos os campos e adicione uma imagem!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    cadastroCarroViewModel.salvarCarro(context.applicationContext)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFAA162C),
                     contentColor = Color.White
-                )
+                ),
+                enabled = !uiState.isLoading
             ) {
-                Text("Salvar Carro")
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Text("Salvar Carro")
+                }
             }
         }
     }
-}
-
-fun saveImageToInternalStorage(context: Context, uri: Uri, fileName: String): String {
-    val inputStream = context.contentResolver.openInputStream(uri)
-    val file = File(context.filesDir, fileName)
-    inputStream.use { input ->
-        file.outputStream().use { output ->
-            input?.copyTo(output)
-        }
-    }
-    return file.absolutePath
 }

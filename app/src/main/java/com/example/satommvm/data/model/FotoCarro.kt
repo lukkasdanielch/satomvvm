@@ -16,5 +16,5 @@ import androidx.room.PrimaryKey
 data class FotoCarro(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val carroId: Int,
-    val imagemRes: Int
+    val imagemUri: String
 )

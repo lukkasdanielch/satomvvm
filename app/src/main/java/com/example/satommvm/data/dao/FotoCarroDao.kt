@@ -1,9 +1,6 @@
 package com.example.satommvm.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.* // <-- Importar 'Delete'
 import com.example.satommvm.data.model.FotoCarro
 import kotlinx.coroutines.flow.Flow
 
@@ -15,4 +12,7 @@ interface FotoCarroDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(foto: FotoCarro)
+
+    @Delete // <-- ADICIONE ESTA FUNÇÃO
+    suspend fun delete(foto: FotoCarro)
 }
