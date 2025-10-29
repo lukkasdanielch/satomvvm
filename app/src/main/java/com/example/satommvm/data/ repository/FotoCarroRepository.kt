@@ -10,5 +10,5 @@ class FotoCarroRepository(private val dao: FotoCarroDao) {
 
     suspend fun adicionarFoto(foto: FotoCarro) = dao.insert(foto)
 
-    suspend fun deletarFoto(foto: FotoCarro) = dao.delete(foto) // <-- ADICIONE ESTA FUNÇÃO
+    suspend fun deletarFoto(foto: FotoCarro) = dao.delete(foto)
 }

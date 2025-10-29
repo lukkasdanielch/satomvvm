@@ -5,7 +5,7 @@ import com.example.satommvm.data.model.Carro
 data class DashboardUiState(
     val isLoading: Boolean = true,
     val searchQuery: String = "",
-    private val fullCarList: List<Carro> = emptyList() // Lista principal vinda do DB
+    private val fullCarList: List<Carro> = emptyList()
 ) {
     /**
      * Esta é a lista que a UI vai mostrar.

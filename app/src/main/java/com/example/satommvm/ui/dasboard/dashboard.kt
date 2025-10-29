@@ -1,7 +1,7 @@
 package com.example.satommvm.ui.dashboard
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable // <-- IMPORTAR
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -52,7 +52,7 @@ fun Dashboard(
                 singleLine = true
             )
 
-            // ... (Lógica de Loading e Lista Vazia) ...
+
             if (uiState.isLoading) { /*...*/ }
             else if (uiState.filteredCarros.isEmpty()) { /*...*/ }
             else {
@@ -63,11 +63,11 @@ fun Dashboard(
                 ) {
                     items(uiState.filteredCarros) { carro ->
                         Card(
-                            // <-- CORREÇÃO: O Card agora é clicável
+
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    // Navega para a tela de fotos com o ID do carro
+
                                     navController.navigate("fotoCarro/${carro.id}")
                                 },
                             elevation = CardDefaults.cardElevation(4.dp)
@@ -91,12 +91,12 @@ fun Dashboard(
                                         ?: carro.imagemRes?.let { painterResource(id = it) }
                                         ?: painterResource(id = R.drawable.sato),
                                     contentDescription = carro.nome,
-                                    modifier = Modifier.size(100.dp), // Removido o clickable da imagem
+                                    modifier = Modifier.size(100.dp),
                                     contentScale = ContentScale.Crop
                                 )
                             }
 
-                            // --- Botões (Editar e Deletar) ---
+
                             Row(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceAround

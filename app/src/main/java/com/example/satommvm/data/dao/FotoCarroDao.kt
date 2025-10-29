@@ -13,6 +13,7 @@ interface FotoCarroDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(foto: FotoCarro)
 
-    @Delete // <-- ADICIONE ESTA FUNÇÃO
+    @Delete
+
     suspend fun delete(foto: FotoCarro)
 }

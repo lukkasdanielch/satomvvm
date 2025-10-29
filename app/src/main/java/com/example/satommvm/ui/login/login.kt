@@ -5,7 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +31,9 @@ fun Login(
 ) {
     val uiState by loginViewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+
+
 
     LaunchedEffect(key1 = uiState) {
         // Se o login deu certo, navega
@@ -78,15 +81,17 @@ fun Login(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- TEXTFIELD DE SENHA CORRIGIDO ---
+
                 OutlinedTextField(
                     value = uiState.password,
                     onValueChange = { loginViewModel.updatePassword(it) },
                     label = { Text("Senha") },
                     modifier = Modifier.fillMaxWidth(),
 
+
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+
 
                 )
 

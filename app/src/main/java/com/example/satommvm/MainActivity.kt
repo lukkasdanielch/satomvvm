@@ -14,14 +14,14 @@ import com.example.satommvm.data.repository.FotoCarroRepository
 import com.example.satommvm.data.repository.UsuarioRepository
 import com.example.satommvm.ui.navigation.AppNavigation
 
-// ... (Imports dos 5 ViewModels)
+
 import com.example.satommvm.ui.login.LoginViewModel
 import com.example.satommvm.ui.cadastro_usuario.CadastroUsuarioViewModel
 import com.example.satommvm.ui.dashboard.DashboardViewModel
 import com.example.satommvm.ui.cadastro_carro.CadastroCarroViewModel
 import com.example.satommvm.ui.alterar_carro.AlterarCarroViewModel
 
-// <-- ADICIONAR IMPORT DO NOVO VIEWMODEL
+
 import com.example.satommvm.ui.foto_carro.FotoCarroViewModel
 
 
@@ -36,14 +36,14 @@ class MainActivity : ComponentActivity() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return when {
-                    // ... (os 5 ViewModels anteriores)
+
                     modelClass.isAssignableFrom(LoginViewModel::class.java) -> LoginViewModel(usuarioRepository) as T
                     modelClass.isAssignableFrom(CadastroUsuarioViewModel::class.java) -> CadastroUsuarioViewModel(usuarioRepository) as T
                     modelClass.isAssignableFrom(DashboardViewModel::class.java) -> DashboardViewModel(carroRepository) as T
                     modelClass.isAssignableFrom(CadastroCarroViewModel::class.java) -> CadastroCarroViewModel(carroRepository) as T
                     modelClass.isAssignableFrom(AlterarCarroViewModel::class.java) -> AlterarCarroViewModel(carroRepository) as T
 
-                    // <-- ADICIONAR O NOVO VIEWMODEL À FACTORY
+
                     modelClass.isAssignableFrom(FotoCarroViewModel::class.java) ->
                         FotoCarroViewModel(fotoCarroRepository) as T
 
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
     private val dashboardViewModel: DashboardViewModel by viewModels { viewModelFactory }
     private val cadastroCarroViewModel: CadastroCarroViewModel by viewModels { viewModelFactory }
     private val alterarCarroViewModel: AlterarCarroViewModel by viewModels { viewModelFactory }
-    private val fotoCarroViewModel: FotoCarroViewModel by viewModels { viewModelFactory } // <-- ADICIONAR
+    private val fotoCarroViewModel: FotoCarroViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

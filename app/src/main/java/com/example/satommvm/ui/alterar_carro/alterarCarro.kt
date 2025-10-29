@@ -25,7 +25,7 @@ import coil.compose.rememberAsyncImagePainter
 fun AlterarCarro(
     navController: NavHostController,
     placa: String,
-    alterarCarroViewModel: AlterarCarroViewModel // <-- CORREÇÃO
+    alterarCarroViewModel: AlterarCarroViewModel
 ) {
     val uiState by alterarCarroViewModel.uiState.collectAsState()
     val context = LocalContext.current

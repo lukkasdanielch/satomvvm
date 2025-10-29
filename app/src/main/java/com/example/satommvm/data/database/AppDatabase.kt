@@ -11,12 +11,12 @@ import com.example.satommvm.data.dao.CarroDao
 import com.example.satommvm.data.dao.UsuarioDao
 import com.example.satommvm.data.dao.FotoCarroDao // <-- ADICIONAR
 
-@Database(entities = [Carro::class, Usuario::class, FotoCarro::class], version = 1) // <-- ADICIONAR
+@Database(entities = [Carro::class, Usuario::class, FotoCarro::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun carroDao(): CarroDao
     abstract fun usuarioDao(): UsuarioDao
-    abstract fun fotoCarroDao(): FotoCarroDao // <-- ADICIONAR
+    abstract fun fotoCarroDao(): FotoCarroDao
 
     companion object {
         @Volatile

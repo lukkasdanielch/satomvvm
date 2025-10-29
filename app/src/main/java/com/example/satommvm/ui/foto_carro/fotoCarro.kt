@@ -130,7 +130,7 @@ private fun FotoCard(foto: FotoCarro, onDeleteClick: () -> Unit) {
                 onClick = onDeleteClick,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.DarkGray, // Cor discreta
+                    containerColor = Color.DarkGray,
                     contentColor = Color.White
                 ),
                 shape = MaterialTheme.shapes.small // Cantos retos

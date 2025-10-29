@@ -29,7 +29,7 @@ class DashboardViewModel(private val repository: CarroRepository) : ViewModel() 
                 }
                 .collect { listaDeCarros ->
                     _uiState.update {
-                        // Atualiza a lista principal e desliga o loading
+
                         it.withCarList(listaDeCarros).copy(isLoading = false)
                     }
                 }
@@ -47,7 +47,7 @@ class DashboardViewModel(private val repository: CarroRepository) : ViewModel() 
         viewModelScope.launch {
             try {
                 repository.delete(carro)
-                // A lista irá atualizar-se automaticamente graças ao Flow
+
             } catch (e: Exception) {
                 // TODO: Expor um erro para a UI
             }

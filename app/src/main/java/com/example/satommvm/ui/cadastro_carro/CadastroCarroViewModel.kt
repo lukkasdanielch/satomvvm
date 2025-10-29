@@ -58,7 +58,7 @@ class CadastroCarroViewModel(private val repository: CarroRepository) : ViewMode
     }
 
     fun resetCadastroCarroState() {
-        _uiState.update { CadastroCarroUiState() } // Limpa o formulário
+        _uiState.update { CadastroCarroUiState() }
     }
 
     private fun saveImageToInternalStorage(context: Context, uri: Uri, fileName: String): String {
